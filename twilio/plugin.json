@@ -1,0 +1,7 @@
+{
+    "author": "Artemus",
+    "name": "Twilio",
+    "version": "1.0.0",
+    "tscordRequiredVersion": ">=1.0.0",
+    "description": "This plugin allows you to send and receive SMS through Twilio"
+}
