@@ -1,53 +1,53 @@
-import { Post, JsonController, UseBefore, Req } from "routing-controllers"
-import { Request } from 'express'
+import { Context, Controller, PlatformContext, Post, UseBefore } from "@tsed/common"
+import { BaseController } from "@utils/classes"
+import bodyParser from "body-parser"
 import { injectable } from "tsyringe"
 import { webhook as TwilioWebhook } from 'twilio'
 import MessagingResponse from 'twilio/lib/twiml/MessagingResponse'
-import bodyParser from "body-parser"
-
-import { BaseController } from "@utils/classes"
-import { Twilio } from "../../services"
 import { twilioConfig } from "../../config"
+import { Twilio } from "../../services"
 
-@JsonController('/twilio')
+@Controller('/twilio')
 @UseBefore(bodyParser.urlencoded({ extended: false }))
 @injectable()
 export class TwilioController extends BaseController {
 
     constructor(
         private twilio: Twilio
-    ){
+    ) {
         super()
     }
 
+
     @Post("/sms")
     @UseBefore(TwilioWebhook( { validate: twilioConfig.apiValidateSource } ))
-    async status(@Req() req: Request) {
+    async status(@Context() { request }: PlatformContext) {
+
         this.twilio.emit("sms", {
-            messageSid: req.body.MessageSid,
-            smsSid: req.body.SmsSid,
-            accountSid: req.body.AccountSid,
-            messagingServiceSid: req.body.MessagingServiceSid,
-            body: req.body.Body,
-            from: req.body.From,
-            to: req.body.To,
+            messageSid: request.body.MessageSid,
+            smsSid: request.body.SmsSid,
+            accountSid: request.body.AccountSid,
+            messagingServiceSid: request.body.MessagingServiceSid,
+            body: request.body.Body,
+            from: request.body.From,
+            to: request.body.To,
             geo: {
                 from: {
-                    country: req.body.FromCountry,
-                    state: req.body.FromState,
-                    city: req.body.FromCity,
-                    zip: req.body.FromZip,
+                    country: request.body.FromCountry,
+                    state: request.body.FromState,
+                    city: request.body.FromCity,
+                    zip: request.body.FromZip,
                 },
                 to: {
-                    country: req.body.ToCountry,
-                    state: req.body.ToState,
-                    city: req.body.ToCity,
-                    zip: req.body.ToZip,
+                    country: request.body.ToCountry,
+                    state: request.body.ToState,
+                    city: request.body.ToCity,
+                    zip: request.body.ToZip,
                 }
             },
-            apiVersion: req.body.ApiVersion
+            apiVersion: request.body.ApiVersion
         })
 
-        return new MessagingResponse();
+        return new MessagingResponse()
     }
 }
