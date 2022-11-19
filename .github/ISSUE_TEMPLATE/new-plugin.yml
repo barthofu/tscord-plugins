@@ -1,0 +1,12 @@
+name: New plugin
+description: Request a new plugin
+title: ""
+labels: ["new plugin"]
+body:
+
+  - type: textarea
+    id: plugin
+    attributes:
+      label: Plugin idea
+      description: Please describe the plugin you are requesting in detail
+      placeholder: describe....
