@@ -1,6 +1,6 @@
 name: New plugin
 description: Request a new plugin
-title: ""
+title: "[New Plugin] "
 labels: ["new plugin"]
 body:
 
