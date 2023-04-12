@@ -1,0 +1,27 @@
+name: Feature request
+description: Request a new feature
+title: "[Feature] "
+labels: [enhancement]
+assignees:
+  - barthofu
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this feature request!
+        
+  - type: input
+    id: plugin
+    attributes:
+      label: Name of the concerned plugin
+    validations:
+      required: false
+
+  - type: textarea
+    id: feature
+    attributes:
+      label: Feature
+      description: Please describe the feature you are requesting in detail
+      placeholder: describe....
+    validations:
+      required: true
