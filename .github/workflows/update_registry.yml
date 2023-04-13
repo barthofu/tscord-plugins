@@ -1,0 +1,50 @@
+name: Update versions registry
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+
+  update_registry:
+    name: Update versions registry
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true && (contains(github.event.pull_request.labels.*.name, 'new plugin') || contains(github.event.pull_request.labels.*.name, 'update plugin'))
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0  # fetch all history
+      
+      - name: Get plugin name
+        id: get_plugin_name
+        run: |
+          echo "plugin_name=$(git diff --name-only HEAD HEAD~1 | grep -m1 "" | cut -d'/' -f2)" >> $GITHUB_OUTPUT
+
+      - name: Get plugin version
+        id: get_plugin_version
+        run: |
+          echo "plugin_version=$(jq -c . < ./plugins/${{ steps.get_plugin_name.outputs.plugin_name }}/plugin.json | jq -r .version)" >> $GITHUB_OUTPUT
+      
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: Update versions registry
+        id: update_registry
+        env:
+          CI_COMMIT_AUTHOR: "Registry Updater Bot"
+          CI_COMMIT_AUTHOR_EMAIL: "bot@github.com"
+          CI_COMMIT_MESSAGE: "update(registry): ${{ steps.get_plugin_name.outputs.plugin_name }}@${{ steps.get_plugin_version.outputs.plugin_version }}"
+        run: |
+          node ./scripts/updateRegistry.js ${{ steps.get_plugin_name.outputs.plugin_name }} ${{ steps.get_plugin_version.outputs.plugin_version }} $GITHUB_SHA
+
+          git config --global user.name "${{ env.CI_COMMIT_AUTHOR }}"
+          git config --global user.email "${{ env.CI_COMMIT_AUTHOR_EMAIL }}"
+          
+          git checkout main
+          git commit -a -m "${{ env.CI_COMMIT_MESSAGE }}"
+          git push
+            
