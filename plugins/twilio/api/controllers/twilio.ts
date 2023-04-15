@@ -4,22 +4,24 @@ import bodyParser from "body-parser"
 import { injectable } from "tsyringe"
 import { webhook as TwilioWebhook } from 'twilio'
 import MessagingResponse from 'twilio/lib/twiml/MessagingResponse'
-import { twilioConfig } from "../../config"
+import { twilioConfig } from "../../configs"
 import { Twilio } from "../../services"
+import { resolveDependency } from "@utils/functions"
 
 @Controller('/twilio')
-@UseBefore(bodyParser.urlencoded({ extended: false }))
 @injectable()
 export class TwilioController extends BaseController {
 
-    constructor(
-        private twilio: Twilio
-    ) {
+    private twilio: Twilio
+
+    constructor() {
         super()
+
+        resolveDependency(Twilio).then(twilio => this.twilio = twilio)
     }
 
 
-    @Post("/sms")
+    @Post('/sms')
     @UseBefore(TwilioWebhook( { validate: twilioConfig.apiValidateSource } ))
     async status(@Context() { request }: PlatformContext) {
 
