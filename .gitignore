@@ -1,0 +1,19 @@
+# keep only the necessary files and folders
+*
+!.gitignore
+!pull_request_template.md
+!README.md
+!versions.json
+!.github/
+!.github/**/*
+!scripts/
+!scripts/**/*
+!plugins/
+!plugins/**/*
+
+# secrets
+*.env
+
+# node
+node_modules/
+*-lock.json
