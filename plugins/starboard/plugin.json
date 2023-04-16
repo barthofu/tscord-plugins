@@ -1,0 +1,7 @@
+{
+    "author": "Sykho",
+    "name": "StarBoard",
+    "version": "1.0.0",
+    "tscordRequiredVersion": ">=2.2",
+    "description": "Get a new StarBoard to your discord server!"
+}
