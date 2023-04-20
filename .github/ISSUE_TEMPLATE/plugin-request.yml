@@ -1,7 +1,7 @@
-name: New plugin
+name: Plugin request
 description: Request a new plugin
-title: "[New Plugin] "
-labels: ["new plugin"]
+title: "[Plugin request] "
+labels: ["plugin request"]
 body:
 
   - type: textarea
